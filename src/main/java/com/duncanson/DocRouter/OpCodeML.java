@@ -1,5 +1,5 @@
 /**
- * OpCode Macro Language - Parses the XML form of the design into an internal hashmap for data driven invocation orchestration.
+ * OpCode Macro Language - Parses the XML form of the design into an internal hashmap for data driven invocation.
  *                   
  *                         OpCodesML by design is intended to be utilized by the CADEngine to drive the order of events being performed.
  *                       
