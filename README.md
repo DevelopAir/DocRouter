@@ -2,7 +2,7 @@
 Java Framework that routes document images through a configurable work flow process.<p>
 This work flow defines the order of events by utilizing the Libre Office designer tool with corresponding connected shapes.<p>
 <p align="center">
-  <img src="./DocRouter/blob/master/WorkFlowExample.png width="500"/>
+  <img src="./WorkFlowExample.png" width="500"/>
 </p>
 One transformation defined in the work flow illustrated with the top shope displayed above, doOCR, includes Optical Character Recognition utilizing the Tesseract-OCR library.<p>
 The Java Framework is made up of the following modules:<p><p>
