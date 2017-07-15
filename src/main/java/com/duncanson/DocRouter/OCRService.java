@@ -13,38 +13,46 @@ import static org.bytedeco.javacpp.lept.pixRead;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.lept.PIX;
 import org.bytedeco.javacpp.tesseract.TessBaseAPI;
-import org.junit.Test;
 import java.util.logging.Logger;
-
+ 
 public class OCRService {
     private static final Logger logger = Logger.getLogger("com.duncanson.DocRouter");
-    
-    @Test
+    private int currentFileIdx;
+    private TessBaseAPI api;
+    private int tesseractInitError;
     
 	/**
 	 * doOCR translates provided document image file (i.e. *.png, jpg, tiff, etc.) into a text string. 
-	 * @param docImageFileName - name of image file (i.e. *.png, *.tiff, etc.)
+	 * @param docImageFileOrDirName - name of image file (i.e. *.png, *.tiff, *.jpg) or name of containing directory
 	 * @return - string of characters recognized from image file
 	 * @throws Exception
 	 */
+    
+    public OCRService() {    	
+    	currentFileIdx = -1;
+    	
+	    api = new TessBaseAPI();
+		    
+	    /** Initialize tesseract-ocr without tessdata path to use English  */
+	    tesseractInitError = api.Init(".", "ENG");
+	    
+	    if (tesseractInitError != 0) {
+	    	logger.severe("Initialization of tesseract failed with error: " + tesseractInitError + ".");
+	    }
+    }
+    
 	public String doOCR(String docImageFileName) throws Exception {
     	
 	    BytePointer outText;
 	    String recognizedText = "";
-	    int error;
+	    
+	    if (tesseractInitError == -1) {
+	    	return "";
+	    }
 	    
 	    try {
-	      System.out.println("docImageFileName "+docImageFileName);
-	    
-	      TessBaseAPI api = new TessBaseAPI();
-	    
-	      /** Initialize tesseract-ocr without tessdata path to use English  */
-	      error = api.Init(".", "ENG");
-	    
-	      if (error != 0) {
-	        System.err.println("Initialization of tesseract failed with error: " + error + ".");
-	        System.exit(1);
-	      }
+	    	
+	      System.out.println("docImageFileOrDirName "+docImageFileName);
 	
 	      // Open specified image with leptonica library
 	      PIX image = pixRead(docImageFileName);
@@ -59,10 +67,6 @@ public class OCRService {
 	      }
 	    
 	      System.out.println("OCR output:\n" + recognizedText);
-	
-	      // Destroy used object and release memory
-	      api.End();
-	      api.close();
 	    
 	      outText.deallocate();
 	      pixDestroy(image);
@@ -77,16 +81,21 @@ public class OCRService {
 	    } 
 	    return recognizedText;
 	}
+	
+	protected void finalize() {
+	      api.End();
+	      api.close();
+	}
 
 	/**
 	 * main - unit tests and demonstrates how to instantiate and use OCRService
 	 * @param args - not used
 	 */
 	public static void main(String[] args) {
-		OCRService OCRServiceInstance = new OCRService();
+		OCRService theOCRService = new OCRService();
 		
 		try {
-			String docInString = OCRServiceInstance.doOCR("./DocImages/test.png");
+			String docInString = theOCRService.doOCR("./DocImages/test.png");
 			System.out.println("Captured the following text\n" + docInString);
 			
 			HDFSModel persistToHDFS = new HDFSModel();

@@ -1,5 +1,5 @@
 /**
- * OpCode Macro Language - Parses the XML form of the design into an internal hashmap for data driven invocation.
+ * OpCode Macro Language - Parses the XML form of the design into an internal hashmap for data driven invocation orchestration.
  *                   
  *                         OpCodesML by design is intended to be utilized by the CADEngine to drive the order of events being performed.
  *                       
@@ -14,7 +14,9 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class OpCodeML {
 
@@ -47,8 +49,7 @@ public class OpCodeML {
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(fXmlFile);
 
-		//optional, but recommended to improve performance and reduces white space issues.
-		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+		// optional, but recommended to improve performance and reduces white space issues.
 		doc.getDocumentElement().normalize();
 
 		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
@@ -132,6 +133,7 @@ public class OpCodeML {
 			}
  		}
  		
+ 		System.out.println("Shapes:");
  		for (HashMap.Entry<String, Object> shape : shapes.entrySet()) {
  			System.out.println("Key:Value "+shape.getKey()+":"+shape.getValue().toString());
  		}
@@ -147,9 +149,8 @@ public class OpCodeML {
 	  return returnValue;
 	}
 
-	public OpCodeML() {
-		this.setOpCodeFileName("src\\main\\java\\com\\duncanson\\DocRouter\\DocRouterOpCode.fodg");
-		this.setStartShapeName("id1");
+	// Disable public access to a non-argument constructor 
+	private OpCodeML() {
 	}
 	
 	public OpCodeML(String strOpCodeFileName, String strStartShapeName) {
@@ -172,10 +173,10 @@ public class OpCodeML {
 	}
 	
 	/**
-	 * getNextNode - simply returns current node as it hasn't been invoked yet when consumer calls without an argument.
-	 * @return - node name of shape to perform next.
+	 * getNextNode - returns next unique shape identifier.
+	 * @return - unique shape identifier
 	 */
-	public String getNextNode() {
+	public String getNextShapeID() {
 		return nextNodeName;
 	}
 
@@ -211,8 +212,9 @@ public class OpCodeML {
 		}
 		
 		// Search for to-connector with matching output value
-		// Note: first element after split is the current shape identifier, so ignore.
+		// Note: first element after split is the current shape identifier, so skip first.
 		for (int i = 1; i < connectors.length; i++) {
+			System.out.println("connectors["+i+"] "+connectors[i].toString());
 			String[] toShapeAndConnectorText = connectors[i].split("%%");
 			String connectorText = toShapeAndConnectorText[1].trim();
 			
@@ -226,7 +228,7 @@ public class OpCodeML {
 				int startOfLiteralLoc = connectorText.indexOf("\"");
 				int endOfLiteralLoc = connectorText.indexOf("\"", startOfLiteralLoc + 1);
 				
-				// Compare return value with a literal value when specified specified
+				// Compare return value with a literal value when specified
 				if (startOfLiteralLoc > -1 && endOfLiteralLoc > -1) {
 					String literalValue = connectorText.substring(startOfLiteralLoc+1, endOfLiteralLoc);
 					
@@ -241,7 +243,7 @@ public class OpCodeML {
 					/**
 					 *  If we got this far and there's only one connector then it's because
 					 *  the connector text is not a literal value and it's not a hard coded condition (i.e. [(TRUE)], [(FALSE)])
-					 *  indicating that we'll need to assign the return value to the indicated key variable name for future
+					 *  indicating that we'll need to assign the return value to the specified key variable name for future
 					 *  reference.
 					 */
 					if (connectorText.length() > 0) {
@@ -278,21 +280,184 @@ public class OpCodeML {
 		return variables.get(inputKey).toString();
 	}
 	
+	public String retreiveNextOperand() {
+		return shapes.get(nextNodeName).toString();
+	}
+	/**
+	 * getNextOperand - returns the next operands' function name.
+	 * 
+	 * @return
+	 */
+	public String getNextOperand() {
+		// Parse the next operand function name out of the shapes hashmap that will look something like this:
+		//  [doOCR,”.\DocImages\”]%!id2%%[docStr]!
+		String nextOperand = shapes.get(nextNodeName).toString();
+		
+		String nextOperandParts[] = nextOperand.split("!");
+		if (nextOperandParts.length > 0) {
+			int commaLoc = nextOperandParts[0].indexOf(",");
+			int firstLeftBracketLoc = nextOperandParts[0].indexOf("[");
+			if (firstLeftBracketLoc > -1 && commaLoc > firstLeftBracketLoc) {
+				return nextOperandParts[0].substring(firstLeftBracketLoc+1, commaLoc);
+			}
+			
+		}
+		return "";
+	}
+
+	public List<String> getNextArguments() {
+		// Builds the next operands' arguments array out of the shapes hashmap that will look something like this:
+		//
+		//  [doOCR,”.\DocImages\”]%!id2%%[docStr]! or
+		//  [containsTarget, docStr, "java|scala"]!
+		//
+		// Note: Arguments surrounded by quotes are taken as a literal string.
+		//       Arguments without the quotes reference a variable name for a value 
+		//       that's been previously stored in the variables' hashmap.
+		//
+		String nextOperand = shapes.get(nextNodeName).toString();
+		
+		int endOfFunctionArgumentsLoc = nextOperand.indexOf("]%!");
+		
+		String operandNameWithArgs;
+		
+		if (endOfFunctionArgumentsLoc > -1) {
+			operandNameWithArgs = nextOperand.substring(0, endOfFunctionArgumentsLoc);
+		} else {
+			operandNameWithArgs = "";
+		}
+		
+		// trim off any leading and trailing spaces and remove the outer brackets.
+		operandNameWithArgs = operandNameWithArgs.trim();
+		operandNameWithArgs = operandNameWithArgs.substring(1, operandNameWithArgs.length());
+		
+		String nextOperandParts[] = operandNameWithArgs.split(",");
+		
+		ArrayList<String> returnArgList = new ArrayList<String>();
+
+		String arg;
+		
+		for (int i = 1; i < nextOperandParts.length; i++) {
+			arg = nextOperandParts[i];
+			char firstChar = arg.charAt(0);
+			char lastChar = arg.charAt(arg.length()-1);
+			if (((int)firstChar == 34 || (int)firstChar == 8221) && 
+				((int) lastChar == 34 || (int) lastChar == 8221)) {
+					// strip of the double quotes
+					arg = arg.substring(1,arg.length()-1);
+					returnArgList.add(arg);
+			} else {
+				String variableValue = getVariable(arg);
+				if (!variableValue.isEmpty()) {
+					returnArgList.add(variableValue);
+				} else {
+					System.out.println("Warning: The value for variable named '"+arg+"' was not located.  Will be passed to "+getNextOperand()+" as an empty value.");
+					returnArgList.add("");
+				}
+			}
+		}
+		
+		return returnArgList;
+	}
+	
+	public boolean advanceOperand(String lastReturnValue) {
+		// Builds the next operands' arguments array out of the shapes hashmap that will look something like this:
+		//
+		//  [doOCR,”.\DocImages\”]%!id2%%[docStr]! or
+		//  [containsTarget, docStr, "java|scala"]!
+		//
+		// Note: Arguments surrounded by quotes are taken as a literal string.
+		//       Arguments without the quotes reference a variable name for a value 
+		//       that's been previously stored in the variables' hashmap.
+		//
+		String nextOperand = shapes.get(nextNodeName).toString();
+		
+		int startOfToConnectorsWithArgsLoc = nextOperand.indexOf("]%!") + 2;
+		
+		String operandNameWithArgs;
+		
+		if (startOfToConnectorsWithArgsLoc > 2 && startOfToConnectorsWithArgsLoc < nextOperand.length()) {
+			operandNameWithArgs = nextOperand.substring(startOfToConnectorsWithArgsLoc, nextOperand.length());
+		} else {
+			operandNameWithArgs = "";
+		}
+		
+		// trim off any leading and trailing spaces and remove the outer brackets.
+		operandNameWithArgs = operandNameWithArgs.trim();
+		operandNameWithArgs = operandNameWithArgs.substring(1, operandNameWithArgs.length());
+		
+		String nextOperandParts[] = operandNameWithArgs.split(",");
+		
+		ArrayList<String> returnArgList = new ArrayList<String>();
+
+		String arg;
+		
+		for (int i = 1; i < nextOperandParts.length; i++) {
+			arg = nextOperandParts[i];
+			char firstChar = arg.charAt(0);
+			char lastChar = arg.charAt(arg.length()-1);
+			if (((int)firstChar == 34 || (int)firstChar == 8221) && 
+				((int) lastChar == 34 || (int) lastChar == 8221)) {
+					returnArgList.add(arg);
+			} else {
+				String variableValue = getVariable(arg);
+				if (!variableValue.isEmpty()) {
+					returnArgList.add(variableValue);
+				} else {
+					System.out.println("Warning: The value for variable named '"+arg+"' was not located.  Will be passed to "+getNextOperand()+" as an empty value.");
+					returnArgList.add("");
+				}
+			}
+		}
+		
+		return true;
+	}
+	
 	/**
 	 * main - test application that also demonstrates how to initialize this object.  Further examples found in CADEngine object.
 	 * @param args - not used.
 	 */
 	public static void main(String[] args) {
+		
+		// where is current directory?
+		String current = System.getProperty("user.dir");
+        System.out.println("Current working directory in Java : " + current);
+
 		// Test routine for OCML object
-		OpCodeML theOCML = new OpCodeML("/Users/pduncanson/workspace/DocRouter/src/main/java/com/duncanson/DocRouter/DocRouterOpCode.fodg", "id1");
+		OpCodeML theOCML = new OpCodeML("./src/main/java/com/duncanson/DocRouter/DocRouterOpCode.fodg", "id1");
 		
 		if (theOCML.loadDOM() == true) {
-			System.out.println("The OpCode File, " + theOCML.getOpCodeFileName() + ", has been successfully parsed into a privately accessible OpCode array for invocation from the CADEngine object.");
+			System.out.println("Successfully processed: '" + theOCML.getOpCodeFileName() + "'");
 		} else {
-			System.out.println("Specified OCML file could not be loaded.");
+			System.out.println("Specified OpCodeML file '" + theOCML.getOpCodeFileName() + "'could not be loaded.  Does it contain valid XML formatted tags and does it exist?");
 		}
 		
 		System.out.println("Successfully processed: '" + theOCML.getOpCodeFileName() + "'");
+		
+		System.out.println("Next Operand "+theOCML.retreiveNextOperand());
+		
+		String nextShapeID = theOCML.getNextShapeID();
+		
+		System.out.println("Next Shape Identifier is "+nextShapeID);
+		
+		System.out.println("Next operand function "+theOCML.getNextOperand());
+		
+		System.out.println("Next operands argument "+theOCML.getNextArguments());
+		
+		OCRService theOCRService = new OCRService();
+		
+		try {
+			String docInString = theOCRService.doOCR("./DocImages/test.png");
+			System.out.println("Captured the following text\n" + docInString);
+			
+			
+		}
+		
+		catch (Exception e) {
+			System.out.println("Exception error occured in doOCR with " + e.toString());
+		}
+		
+		System.out.println("Variable for docStr "+theOCML.getVariable("docStr"));
 	}
 }
 
