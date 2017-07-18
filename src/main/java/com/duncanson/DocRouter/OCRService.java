@@ -17,7 +17,6 @@ import java.util.logging.Logger;
  
 public class OCRService {
     private static final Logger logger = Logger.getLogger("com.duncanson.DocRouter");
-    private int currentFileIdx;
     private TessBaseAPI api;
     private int tesseractInitError;
     
@@ -29,7 +28,6 @@ public class OCRService {
 	 */
     
     public OCRService() {    	
-    	currentFileIdx = -1;
     	
 	    api = new TessBaseAPI();
 		    
@@ -52,7 +50,7 @@ public class OCRService {
 	    
 	    try {
 	    	
-	      System.out.println("docImageFileOrDirName "+docImageFileName);
+	      System.out.println("docImageFileName "+docImageFileName);
 	
 	      // Open specified image with leptonica library
 	      PIX image = pixRead(docImageFileName);
@@ -63,10 +61,8 @@ public class OCRService {
 	      recognizedText = outText.getString();
 	    
 	      if (recognizedText.isEmpty()) {
-	    	  System.out.println("No recognized characters in "+docImageFileName);
+	    	  System.out.println("No recognized characters found in "+docImageFileName);
 	      }
-	    
-	      System.out.println("OCR output:\n" + recognizedText);
 	    
 	      outText.deallocate();
 	      pixDestroy(image);

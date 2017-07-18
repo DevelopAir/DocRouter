@@ -15,21 +15,26 @@ import java.io.File;
 import java.lang.reflect.Method;
 
 public class CADEngine {
-	// Where does this go?
+	
 	private static final Logger logger = Logger.getLogger("com.duncanson.DocRouter");
 	private OpCodeML theOpCode;
+	private boolean running = false;
+	
+	public void setRunning(boolean inputRunning) {
+		running = inputRunning;
+	}
 	
 	/**
 	 * retrieveArrayOfOperandNames - utilizes reflection to capture operands from Operands.java.
 	 * @return List of names for each operand routine.
 	 */
-	private List<String> retrieveArrayOfOperandNames() {
+	private List<String> retrieveOperandNames() {
 		List<String> arrayOfOperandNames = new ArrayList<String>();
 		try {
 			// Using reflection capture an array of all operand names.
 			Method[] publicMethods = Class.forName("com.duncanson.DocRouter.Operands").getMethods();
 		
-			System.out.println("Operands:");
+			System.out.println("---------\nOperands:\n---------");
 			
 			String operandPackageNamePrefix = "java.lang.String com.duncanson.DocRouter.Operands.";
 			for (Method method: publicMethods) {
@@ -49,6 +54,7 @@ public class CADEngine {
 					}
 				}
 			}
+			System.out.println("---------");
 		}
 		catch (Exception e) {
 			arrayOfOperandNames.clear();
@@ -62,13 +68,13 @@ public class CADEngine {
 	 * doRun - Run loop that invokes each Operand as specified in provided OpCode file at the indicated shape identifier.
 	 * 
 	 * @param OpCodeMLFileName - Location of Operand Code Macro Language file.
-	 * @param startShapeName - Shape name that will be performed first.
+	 * @param startShapeID - Unique Shape Identifier that will be performed first.  Designated in Libre Office's *.fodg file with xml:id tag.
 	 * @param runContinuously - true -> restart to startShapeName after reaching end of work flow.  Used for processing a stream of files.
 	 *                          false -> exit when reaching end of work flow.
 	 *                          
 	 * @return - true -> No errors, false otherwise
 	 */
-	public boolean doRun(String OpCodeMLFileName, String startShapeName, boolean runContinuously) {
+	public boolean doRun(String OpCodeMLFileName, String startShapeID, boolean runContinuously) {
 		
 	    File localFS = new File(OpCodeMLFileName);
 	    if (!localFS.exists() || localFS.isDirectory()) {
@@ -79,52 +85,67 @@ public class CADEngine {
 	    	return false;
 	    }
 		
-		theOpCode = new OpCodeML(OpCodeMLFileName, startShapeName);
+		theOpCode = new OpCodeML(OpCodeMLFileName, startShapeID);
 		
 		if (theOpCode.loadDOM() == true) {
 			String errorMessage = "The OpCode File, " + theOpCode.getOpCodeFileName() + ", has been successfully parsed into an OpCode array for invocation from the CADEngine object.";
-			logger.info(errorMessage);
+			System.out.println(errorMessage);
 		} else {
-			System.out.println("Specified OCML file '"+theOpCode.getOpCodeFileName()+"' could not be loaded.  Is it valid XML and does referenced file exist?");
+			String errorMessage = "Specified OCML file '"+theOpCode.getOpCodeFileName()+"' could not be loaded.  Is it valid XML and does referenced file exist?";
+			logger.severe(errorMessage);
 			System.exit(0);
 		}
 		
 		// Retrieve list of operand names using reflection from the 'Operands' class.
-		List<String> arrayOfOperandNames = retrieveArrayOfOperandNames();
+		List<String> arrayOfOperandNames = retrieveOperandNames();
 		
 		if (arrayOfOperandNames.isEmpty()) {
 			logger.severe("CADEngine requires at least one Operand to be defined in Operands.java.");
 			System.exit(0);
 		}
 		
-		// Instantiate 
 		Operands theOperands = new Operands();
 
-		boolean running = true;
-		String nextOperand = "";
+		setRunning(true);
+		
+		String currentOperand = "";
 		try {
 			
+			// CADEngine run loop
 			while (running) {
-				nextOperand = theOpCode.getNextOperand();
-				List<String> nextArgs = theOpCode.getNextArguments();
 				
-				Method nextMethod = Operands.class.getMethod(nextOperand, List.class);
+				currentOperand = theOpCode.getCurrentOperand();
+				List<String> nextArgs = theOpCode.getCurrentArgs();
+				
+				System.out.println(currentOperand+"("+nextArgs.toString()+")");
+				
+				Method nextMethod = Operands.class.getMethod(currentOperand, List.class);
 				
 				String returnValue = (String) nextMethod.invoke(theOperands, nextArgs);
 				
-				System.out.println("nextOperand is "+nextOperand);
-				System.out.println("nextArgs: "+nextArgs);
-				System.out.println("returnValue: "+returnValue);
+				if (returnValue.length() < 20) {
+					System.out.println("returnValue:\n-----\n"+returnValue+"\n-----");
+				} else {
+					System.out.println("returnValue:\n-----\n"+returnValue.substring(0,20)+"...\n-----");
+				}
 				
-				//theOperands.getOperand(nextOperandName);
+				// get next shape id
+				String nextNode = theOpCode.getNextNode(returnValue);
 				
-				//String nextNode = getNextNode(returnValue);
+				// If the last operand invoked did not have any to-connectors (i.e. it reached the end shape) 
+				if (nextNode.length() < 1) {
+					if (runContinuously) {
+						// Reset to initial start shape for subsequent run.
+						theOpCode.resetOpCode();
+					} else {
+						System.out.println("Process complete.");
+						setRunning(false);
+					}
+				}
 	        }
 			
 		} catch(Exception e) {
-			// !!!!! when there's more time selectively capture each of the following reflection-related exceptions with distinct conditions:
-			// NoSuchMethodException, IllegalAccessException, InvocationTargetException.
-			logger.severe("Exception occured in main run loop at "+nextOperand+". "+e.getStackTrace());
+			logger.severe("Exception occured in main run loop at "+currentOperand+". "+e.toString());
 		}
 			
 		return true;
@@ -135,7 +156,7 @@ public class CADEngine {
 		CADEngine theCADEngine = new CADEngine();
 		
 		// Start the run loop.
-		theCADEngine.doRun("./src/main/java/com/duncanson/DocRouter/DocRouterOpCode.fodg", "id1", true);	
+		theCADEngine.doRun("./src/main/java/com/duncanson/DocRouter/DocRouterOpCode.fodg", "id3", true);	
 	}
 }
 
