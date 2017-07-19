@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <office:document xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:presentation="urn:oasis:names:tc:opendocument:xmlns:presentation:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:config="urn:oasis:names:tc:opendocument:xmlns:config:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:smil="urn:oasis:names:tc:opendocument:xmlns:smil-compatible:1.0" xmlns:anim="urn:oasis:names:tc:opendocument:xmlns:animation:1.0" xmlns:rpt="http://openoffice.org/2005/report" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:officeooo="http://openoffice.org/2009/office" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:drawooo="http://openoffice.org/2010/draw" xmlns:calcext="urn:org:documentfoundation:names:experimental:calc:xmlns:calcext:1.0" xmlns:loext="urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0" xmlns:css3t="http://www.w3.org/TR/css3-text/" office:version="1.2" office:mimetype="application/vnd.oasis.opendocument.graphics">
- <office:meta><meta:creation-date>2017-06-30T18:10:52.543811000</meta:creation-date><dc:date>2017-07-17T00:09:08.325928000</dc:date><meta:editing-duration>P2DT23H31M26S</meta:editing-duration><meta:editing-cycles>21</meta:editing-cycles><meta:generator>LibreOffice/5.3.1.2$MacOSX_X86_64 LibreOffice_project/e80a0e0fd1875e1696614d24c32df0f95f03deb2</meta:generator><meta:document-statistic meta:object-count="10"/></office:meta>
+ <office:meta><meta:creation-date>2017-06-30T18:10:52.543811000</meta:creation-date><dc:date>2017-07-18T23:23:48.604865000</dc:date><meta:editing-duration>P3DT6H21M21S</meta:editing-duration><meta:editing-cycles>24</meta:editing-cycles><meta:generator>LibreOffice/5.3.1.2$MacOSX_X86_64 LibreOffice_project/e80a0e0fd1875e1696614d24c32df0f95f03deb2</meta:generator><meta:document-statistic meta:object-count="10"/></office:meta>
  <office:settings>
   <config:config-item-set config:name="ooo:view-settings">
    <config:config-item config:name="VisibleAreaTop" config:type="int">258</config:config-item>
@@ -35,7 +35,7 @@
      <config:config-item config:name="IsClickChangeRotation" config:type="boolean">true</config:config-item>
      <config:config-item config:name="SlidesPerRow" config:type="short">4</config:config-item>
      <config:config-item config:name="EditMode" config:type="int">0</config:config-item>
-     <config:config-item config:name="VisibleAreaTop" config:type="int">258</config:config-item>
+     <config:config-item config:name="VisibleAreaTop" config:type="int">-430</config:config-item>
      <config:config-item config:name="VisibleAreaLeft" config:type="int">-7443</config:config-item>
      <config:config-item config:name="VisibleAreaWidth" config:type="int">36914</config:config-item>
      <config:config-item config:name="VisibleAreaHeight" config:type="int">29127</config:config-item>
@@ -253,10 +253,10 @@
    <style:graphic-properties draw:textarea-horizontal-align="justify" draw:textarea-vertical-align="middle" draw:auto-grow-height="false" fo:min-height="1.274cm" fo:min-width="13.216cm"/>
   </style:style>
   <style:style style:name="gr6" style:family="graphic" style:parent-style-name="standard">
-   <style:graphic-properties draw:textarea-horizontal-align="justify" draw:textarea-vertical-align="middle" draw:auto-grow-height="false" fo:min-height="1.782cm" fo:min-width="8.39cm"/>
+   <style:graphic-properties draw:textarea-horizontal-align="justify" draw:textarea-vertical-align="middle" draw:auto-grow-height="false" fo:min-height="1.782cm" fo:min-width="9.66cm"/>
   </style:style>
   <style:style style:name="gr7" style:family="graphic" style:parent-style-name="standard">
-   <style:graphic-properties draw:stroke="none" svg:stroke-color="#000000" draw:fill="none" draw:fill-color="#ffffff" fo:min-height="0cm"/>
+   <style:graphic-properties draw:stroke="none" svg:stroke-color="#000000" draw:fill="none" draw:fill-color="#ffffff" fo:min-height="1.407cm"/>
   </style:style>
   <style:style style:name="P1" style:family="paragraph">
    <style:paragraph-properties fo:text-align="center"/>
@@ -338,10 +338,10 @@
     </draw:connector>
     <draw:custom-shape draw:style-name="gr3" draw:text-style-name="P1" xml:id="id2" draw:id="id2" draw:layer="layout" svg:width="14.732cm" svg:height="4.48cm" svg:x="3.38cm" svg:y="10.694cm">
      <text:p text:style-name="P1">If document contains</text:p>
-     <text:p text:style-name="P1">[containsTarget, docStr, “java|scala”]</text:p>
+     <text:p text:style-name="P1">[containsWord, docStr, “java|scala”]</text:p>
      <draw:enhanced-geometry svg:viewBox="0 0 21600 21600" draw:glue-points="10800 0 0 10800 10800 21600 21600 10800" draw:text-areas="5400 5400 16200 16200" draw:type="diamond" draw:enhanced-path="M 10800 0 L 21600 10800 10800 21600 0 10800 10800 0 Z N"/>
     </draw:custom-shape>
-    <draw:custom-shape draw:style-name="gr4" draw:text-style-name="P1" xml:id="id4" draw:id="id4" draw:layer="layout" svg:width="14.224cm" svg:height="1.569cm" draw:transform="skewX (-0.00593411945678072) rotate (-0.0059341194567806) translate (1cm 16.211cm)">
+    <draw:custom-shape draw:style-name="gr4" draw:text-style-name="P1" xml:id="id4" draw:id="id4" draw:layer="layout" svg:width="14.224cm" svg:height="1.569cm" draw:transform="skewX (-0.00575958653158129) rotate (-0.0059341194567806) translate (1cm 16.211cm)">
      <text:p text:style-name="P1">[saveFile, docStr, “./SoftwareDoc/”, imageFileName]</text:p>
      <draw:enhanced-geometry svg:viewBox="0 0 21600 21600" draw:type="rectangle" draw:enhanced-path="M 0 0 L 21600 0 21600 21600 0 21600 0 0 Z N"/>
     </draw:custom-shape>
@@ -351,12 +351,12 @@
      <text:p text:style-name="P1">[saveFile, docStr, “./Other/”, imageFileName]</text:p>
      <draw:enhanced-geometry svg:viewBox="0 0 21600 21600" draw:type="rectangle" draw:enhanced-path="M 0 0 L 21600 0 21600 21600 0 21600 0 0 Z N"/>
     </draw:custom-shape>
-    <draw:custom-shape draw:style-name="gr6" draw:text-style-name="P1" xml:id="id3" draw:id="id3" draw:layer="layout" svg:width="8.89cm" svg:height="2.032cm" svg:x="6.356cm" svg:y="1.291cm">
+    <draw:custom-shape draw:style-name="gr6" draw:text-style-name="P1" xml:id="id3" draw:id="id3" draw:layer="layout" svg:width="10.16cm" svg:height="2.032cm" svg:x="5.611cm" svg:y="1.936cm">
      <text:p text:style-name="P1">While</text:p>
-     <text:p text:style-name="P1">[getNextFile, “./DocImages”]</text:p>
+     <text:p text:style-name="P1">[getNextImageFile, “./DocImages”]</text:p>
      <draw:enhanced-geometry svg:viewBox="0 0 21600 21600" draw:type="rectangle" draw:enhanced-path="M 0 0 L 21600 0 21600 21600 0 21600 0 0 Z N"/>
     </draw:custom-shape>
-    <draw:connector draw:style-name="gr2" draw:text-style-name="P2" draw:layer="layout" svg:x1="10.801cm" svg:y1="3.323cm" svg:x2="10.78cm" svg:y2="5.468cm" draw:start-shape="id3" draw:start-glue-point="2" draw:end-shape="id1" draw:end-glue-point="0" svg:d="M10801 3323v1056h-21v1089" svg:viewBox="0 0 22 2146">
+    <draw:connector draw:style-name="gr2" draw:text-style-name="P2" draw:layer="layout" svg:x1="10.691cm" svg:y1="3.968cm" svg:x2="10.78cm" svg:y2="5.468cm" draw:start-shape="id3" draw:start-glue-point="2" draw:end-shape="id1" draw:end-glue-point="0" svg:d="M10691 3968v734h89v766" svg:viewBox="0 0 90 1501">
      <text:p text:style-name="P1">[imageFileName]</text:p>
     </draw:connector>
     <draw:frame draw:style-name="gr7" draw:text-style-name="P3" draw:layer="layout" svg:width="0.127cm" svg:height="1.657cm" svg:x="10.652cm" svg:y="1.889cm">

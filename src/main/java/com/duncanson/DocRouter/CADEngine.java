@@ -14,14 +14,24 @@ import java.util.logging.Logger;
 import java.io.File;
 import java.lang.reflect.Method;
 
-public class CADEngine {
+abstract class Observer {
+	protected Subject subject;
+	public abstract void update();
+}
+
+public class CADEngine extends Observer {
 	
 	private static final Logger logger = Logger.getLogger("com.duncanson.DocRouter");
 	private OpCodeML theOpCode;
 	private boolean running = false;
 	
-	public void setRunning(boolean inputRunning) {
-		running = inputRunning;
+	public void update() {
+		running = subject.getRunningState();
+	}
+	
+	public CADEngine(Subject subject) {
+		this.subject = subject;
+		this.subject.add(this);
 	}
 	
 	/**
@@ -104,11 +114,11 @@ public class CADEngine {
 			System.exit(0);
 		}
 		
-		Operands theOperands = new Operands();
-
-		setRunning(true);
+		Operands theOperands = new Operands(subject);
 		
 		String currentOperand = "";
+		
+		running = true;
 		try {
 			
 			// CADEngine run loop
@@ -139,7 +149,7 @@ public class CADEngine {
 						theOpCode.resetOpCode();
 					} else {
 						System.out.println("Process complete.");
-						setRunning(false);
+						running = false;
 					}
 				}
 	        }
@@ -152,8 +162,9 @@ public class CADEngine {
 	}
 	
 	public static void main(String[] args) {
-
-		CADEngine theCADEngine = new CADEngine();
+		Subject subject = new Subject();
+		
+		CADEngine theCADEngine = new CADEngine(subject);
 		
 		// Start the run loop.
 		theCADEngine.doRun("./src/main/java/com/duncanson/DocRouter/DocRouterOpCode.fodg", "id3", true);	
