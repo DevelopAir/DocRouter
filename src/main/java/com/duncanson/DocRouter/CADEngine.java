@@ -133,23 +133,25 @@ public class CADEngine extends Observer {
 				
 				String returnValue = (String) nextMethod.invoke(theOperands, nextArgs);
 				
-				if (returnValue.length() < 20) {
-					System.out.println("returnValue:\n-----\n"+returnValue+"\n-----");
-				} else {
-					System.out.println("returnValue:\n-----\n"+returnValue.substring(0,20)+"...\n-----");
-				}
-				
-				// get next shape id
-				String nextNode = theOpCode.getNextNode(returnValue);
-				
-				// If the last operand invoked did not have any to-connectors (i.e. it reached the end shape) 
-				if (nextNode.length() < 1) {
-					if (runContinuously) {
-						// Reset to initial start shape for subsequent run.
-						theOpCode.resetOpCode();
+				if (running) {
+					if (returnValue.length() < 20) {
+						System.out.println("returnValue:\n-----\n"+returnValue+"\n-----");
 					} else {
-						System.out.println("Process complete.");
-						running = false;
+						System.out.println("returnValue:\n-----\n"+returnValue.substring(0,20)+"...\n-----");
+					}
+
+					// get next shape id
+					String nextNode = theOpCode.getNextNode(returnValue);
+					
+					// If the last operand invoked did not have any to-connectors (i.e. it reached the end shape) 
+					if (nextNode.length() < 1) {
+						if (runContinuously) {
+							// Reset to initial start shape for subsequent run.
+							theOpCode.resetOpCode();
+						} else {
+							System.out.println("Process complete.");
+							running = false;
+						}
 					}
 				}
 	        }
@@ -158,6 +160,7 @@ public class CADEngine extends Observer {
 			logger.severe("Exception occured in main run loop at "+currentOperand+". "+e.toString());
 		}
 			
+		System.out.println("DocRouter ending succesfully.");
 		return true;
 	}
 	
