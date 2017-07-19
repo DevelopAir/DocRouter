@@ -1,8 +1,0 @@
-Expansion of Multiple Parameter Lists
-|n general, a definition of a function with multiple parameter lists
-def f(args|).u(argsn) = E
-where n >1, is equivalent to
-def f(args|)...(argsnii) I {def g(args,,) I Eig}
-where g is a fresh identifier. Or for short:
-def ((args|)...(args,,_‘) : (argsn :> E)
-
