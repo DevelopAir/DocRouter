@@ -5,8 +5,8 @@ This workflow defines the order of events by utilizing the Open Source designer 
   <img src="./WorkFlowExample.png" width="500"/>
 </p>
 One transformation defined in the workflow as illustrated above, doOCR, will perform Optical Character Recognition on supplied document images utilizing the <b><a href=https://en.wikipedia.org/wiki/Tesseract_(software)>Tesseract-OCR</a></b> library.<p><p>
-<b>To run the attached Java Frameework:</b><p><p>
-<b>Step 1:</b>  Download and unzip the attached DocRouter Application by clicking the corresponding 'Clone or Download...' green button and then select 'Download Zip'.
+<b>To install and run the attached Java Frameework:</b><p><p>
+<b>Step 1:</b>  Download and unzip the attached DocRouter Application by clicking the corresponding 'Clone or Download...' green button and then select 'Download Zip'.<p>
 <b>Step 2:</b>  Open the enclosing 'DocRouter' folder created from Step 1 with the Eclipse IDE by selecting 'File->Open Projects from File System...'.<p>
 <b>Step 3:</b>  Open the CADEngine.java file from Eclipse.<p>
 <b>Step 4:</b>  Select 'Run->Run As->Java Application' from Eclipse.<p>
