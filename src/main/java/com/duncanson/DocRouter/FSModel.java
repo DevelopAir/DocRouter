@@ -94,7 +94,6 @@ public class FSModel {
 		
 		boolean successful;
 		
-		//successful = localFS.createDir("/Users/pduncanson/Duncanson/DocRouter/Other");
 		successful = localFS.createDir("./Other");
 		
 		System.out.println("createDir returned "+successful);
@@ -108,7 +107,7 @@ public class FSModel {
 			}
 		}
 		catch(IOException e) {
-			System.out.println("Exception occured when attempting to local.readFile. exception is "+e.toString());
+			System.out.println("Exception occured when attempting to local.readFile. Exception is "+e.toString());
 		}
 
 	}

@@ -61,12 +61,13 @@ public class Operands {
 		
 		if (args.size() != 1) {
 			logger.info("getNextFile requires a directory path where document images reside.");
-			return "";
+			subject.setRunningState(false);
 		}
 
 	    File localFS = new File(args.get(0));
 	    if (!localFS.exists() || !localFS.isDirectory()) {
 	    	logger.severe("getNextFile cannot locate specified directory '"+args.get(0)+"' from "+System.getProperty("user.dir")+".");
+	    	subject.setRunningState(false);
 	    }
 	    
 	    File[] fileList = localFS.listFiles();
@@ -95,8 +96,6 @@ public class Operands {
 	    	returnValue = nextFile.toString();
 	    } else {
 	    	subject.setRunningState(false);
-	    	//setMessage("StopRunning");
-	    	//notifyObservers();
 	    }
 		
 		return returnValue;
@@ -118,12 +117,13 @@ public class Operands {
 		
 		if (args.size() != 1) {
 			logger.info("getNextFile requires a directory path where document images reside.");
-			return "";
+			subject.setRunningState(false);
 		}
 
 	    File localFS = new File(args.get(0));
 	    if (!localFS.exists() || !localFS.isDirectory()) {
 	    	logger.severe("getNextFile cannot locate specified directory '"+args.get(0)+"' from "+System.getProperty("user.dir")+".");
+	    	subject.setRunningState(false);
 	    }
 	    
 	    File[] fileList = localFS.listFiles();
@@ -135,7 +135,12 @@ public class Operands {
     			String fileName = fileList[getNextImageFileIdx].getName();
     			System.out.println(fileName);
     			String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
-    			if (extension.contentEquals("jpg") || extension.contentEquals("png") || extension.contentEquals("tiff")) {
+    			if (extension.contentEquals("jpg") || 
+    				extension.contentEquals("png") || 
+    				extension.contentEquals("tiff") ||
+    				extension.contentEquals("bmp") ||
+    				extension.contentEquals("pnm") ||
+    				extension.contentEquals("jfif")) {
     				break;
     			}
     		}
@@ -267,12 +272,9 @@ public class Operands {
 		return returnValue;
 	}
 	
-	public String occursInTarget(List<String> args) {
-		String returnValue = "";
-		if (args.size() != 2) {
-			
-		}
-		return returnValue;
+	public String stopRunning(List<String> args) {
+		subject.setRunningState(false);
+		return "";
 	}
 	
 	public static void main(String[] args) {
