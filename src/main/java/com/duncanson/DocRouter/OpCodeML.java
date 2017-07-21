@@ -64,9 +64,9 @@ public class OpCodeML {
 
 		System.out.println("----------------------------");
 
- 		for (int temp = 0; temp < nList.getLength(); temp++) {
+ 		for (int shapeIdx = 0; shapeIdx < nList.getLength(); shapeIdx++) {
 
-			Node nNode = nList.item(temp);
+			Node nNode = nList.item(shapeIdx);
 
 			System.out.println("\nCurrent Element :" + nNode.getNodeName());
 			
@@ -94,6 +94,7 @@ public class OpCodeML {
 					
 					System.out.println("Shape Name : " + shapeName);
 					System.out.println("Shape Text : " + shapeText);
+					System.out.println(shapeName+"|"+shapeText);
 					shapes.put(shapeName, shapeText);
 				}
 			}
@@ -103,9 +104,9 @@ public class OpCodeML {
 
 		System.out.println("----------------------------");
 
- 		for (int temp = 0; temp < nList.getLength(); temp++) {
+ 		for (int connectorIdx = 0; connectorIdx < nList.getLength(); connectorIdx++) {
 
-			Node nNode = nList.item(temp);
+			Node nNode = nList.item(connectorIdx);
 
 			System.out.println("\nCurrent Element :" + nNode.getNodeName());
 			
@@ -134,7 +135,9 @@ public class OpCodeML {
 					if (matchingShape.indexOf("%!") == -1) {
 						matchingShape = matchingShape + "%!";
 					}
-					shapes.put(startShape, matchingShape+endShape+"%%"+shapeText+"!");
+					String opCodeLine = matchingShape+endShape+"%%"+shapeText+"!";
+					System.out.println(startShape+"|"+opCodeLine);
+					shapes.put(startShape, opCodeLine);
 				}
 			}
  		}
@@ -226,10 +229,10 @@ public class OpCodeML {
 			String[] toShapeAndConnectorText = connectors[i].split("%%");
 			String connectorText = toShapeAndConnectorText[1].trim();
 			
-			if (connectorText.equals(TRUE) && lastReturnValue.equals(TRUE)) {
+			if (connectorText.contentEquals(TRUE) && lastReturnValue.contentEquals(TRUE)) {
 				currentShapeID = toShapeAndConnectorText[0].trim();
 				break;
-			} else if (connectorText.equals(FALSE) && lastReturnValue.equals(FALSE)) {
+			} else if (connectorText.contentEquals(FALSE) && lastReturnValue.contentEquals(FALSE)) {
 				currentShapeID = toShapeAndConnectorText[0].trim();
 				break;
 			} else {
@@ -240,7 +243,7 @@ public class OpCodeML {
 				if (startOfLiteralLoc > -1 && endOfLiteralLoc > -1) {
 					String literalValue = connectorText.substring(startOfLiteralLoc+1, endOfLiteralLoc);
 					
-					if (lastReturnValue.equals(literalValue)) {
+					if (lastReturnValue.contentEquals(literalValue)) {
 						// set up for branching down this to-connector
 						currentShapeID = toShapeAndConnectorText[0].trim();
 						break;

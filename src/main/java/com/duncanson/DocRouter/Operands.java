@@ -15,10 +15,15 @@ import java.util.List;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.pdfbox.text.PDFTextStripperByArea;
+
 public class Operands {
 	private static final Logger logger = Logger.getLogger("com.duncanson.DocRouter");
 	private static int getNextFileIdx;
 	private static int getNextImageFileIdx;
+	private static int getNextDocFileIdx;
 	
 	private OCRService theOCRService;
 	private Subject subject;
@@ -36,6 +41,7 @@ public class Operands {
 	public Operands(Subject inputSubject) {
 		getNextFileIdx = -1;
 		getNextImageFileIdx = -1;
+		getNextDocFileIdx = -1;
 
 		theOCRService = new OCRService();
 		
@@ -156,6 +162,84 @@ public class Operands {
 		return returnValue;
 	}
 
+	/**
+	 * getNextImageFile - retrieve each document file name (*.jpg, *.tiff, *.png, bmp, *.pnm, *.jfif or *.pdf) from specified subdirectory.
+	 * 
+	 * 	 * Note: To emulate a data stream that might otherwise come from a cloud-based service this
+	 *       routine was developed to serially process image files within a subdirectory while keeping
+	 *       track of current file (i.e. getNextFileIdx) the way Kafka, for example, would keep track
+	 *       of read location within the data stream. 
+	 *       
+	 * @param args
+	 * @return
+	 */
+	public String getNextDocFile(List<String> args) {
+		String returnValue = "";
+		
+		if (args.size() != 1) {
+			logger.severe("getNextFile requires a directory path where document images reside.");
+			subject.setRunningState(false);
+		}
+
+	    File localFS = new File(args.get(0));
+	    if (!localFS.exists() || !localFS.isDirectory()) {
+	    	logger.severe("getNextFile cannot locate specified directory '"+args.get(0)+"' from "+System.getProperty("user.dir")+".");
+	    	subject.setRunningState(false);
+	    }
+	    
+	    File[] fileList = localFS.listFiles();
+	    
+	    getNextDocFileIdx++;
+    	
+    	for (; getNextDocFileIdx < fileList.length; getNextDocFileIdx++) {
+    		if (fileList[getNextDocFileIdx].isFile()) {
+    			String fileName = fileList[getNextDocFileIdx].getName();
+    			System.out.println(fileName);
+    			String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+    			if (extension.contentEquals("jpg") || 
+    				extension.contentEquals("png") || 
+    				extension.contentEquals("tiff") ||
+    				extension.contentEquals("bmp") ||
+    				extension.contentEquals("pnm") ||
+    				extension.contentEquals("jfif") ||
+    				extension.contentEquals("pdf")) {
+    				break;
+    			}
+    		}
+    	}
+
+	    if (getNextDocFileIdx < fileList.length) {
+	    	File nextFile = fileList[getNextDocFileIdx];
+	    	returnValue = nextFile.toString();
+	    } else {
+	    	subject.setRunningState(false);
+	    }
+		
+		return returnValue;
+	}
+	
+	public String fileExtensionMatches(List<String> args) {
+		int lastPeriodLoc = -1;
+		String fileName;
+		String targetFileExtension;
+		if (args.size() != 2) {
+			logger.severe("fileExtensionMatches requires 2 arguments: String fileName, String targetFileExtension.");
+			subject.setRunningState(false);
+			return FALSE;
+		}
+		
+	    fileName = args.get(0);
+	    targetFileExtension = args.get(1);
+	    
+	    lastPeriodLoc = fileName.lastIndexOf(".");
+	    
+	    if (lastPeriodLoc > -1) {
+	    	if (fileName.substring(lastPeriodLoc, fileName.length()).contentEquals("."+targetFileExtension)) {
+	    		return TRUE;
+	    	}
+	    }
+	    return FALSE;
+	}
 	
 	/**
 	 * doOCR - converts document image files to a text string utilizing the Tesseract-OCR library.
@@ -182,19 +266,55 @@ public class Operands {
     		}
     		catch(Exception e) {
     			logger.severe("doOCR Exception error "+e.getStackTrace());
+    			subject.setRunningState(false);
     		}
 	    } else {
-	    	logger.severe("doOCR needs a file name and not a subdirectory.  Use the getNextFile operand to retrieve files from a targeted subdirectory.");
+	    	logger.severe("doOCR needs a file name and not a subdirectory.  Use the getNextFile, getNextImageFile, getNextDocFile operands to retrieve files from a targeted subdirectory.");
+	    	subject.setRunningState(false);
 	    }
     
 		return returnValue;
 		
 	}
 	
+	public String doPDFToText(List<String> args) {
+		String returnValue = "";
+		
+		if (args.size() != 1) {
+			logger.severe("doPDFToText needs 1 argument: String fileNameOfPDF.");
+			return FALSE;
+		}
+		
+	    File localFS = new File(args.get(0));
+	    if (!localFS.exists()) {
+	    	logger.severe("doPDFToText cannot locate specified image file '"+args.get(0)+"'.");
+	    }
+	    
+	    if (!localFS.isDirectory()) {
+			try {
+			    PDDocument document = null;
+			    document = PDDocument.load(new File(localFS.toString()));
+			    document.getClass();
+			    if (!document.isEncrypted()) {
+			        PDFTextStripperByArea stripper = new PDFTextStripperByArea();
+			        stripper.setSortByPosition(true);
+			        PDFTextStripper Tstripper = new PDFTextStripper();
+			        returnValue = Tstripper.getText(document);
+			        System.out.println("Text:" + returnValue);
+			    }
+			} catch (Exception e) {
+				returnValue = "";
+				logger.severe("Exception occured in doPDFToText: "+e.toString());
+			}
+	    }
+		return returnValue;
+	}
+	
 	public String containsRegex(List<String> args) {
 		String returnValue = FALSE;
 		
 		if (args.size() != 2) {
+			logger.severe("containsRegex needs 2 arguments: String stringToMatch, String regexValue.");
 			returnValue = FALSE;
 		}
 		

@@ -160,7 +160,7 @@ public class CADEngine extends Observer {
 			logger.severe("Exception occured in main run loop at "+currentOperand+". "+e.toString());
 		}
 			
-		System.out.println("DocRouter ending succesfully.");
+		System.out.println("----- DocRouter ending succesfully. -----");
 		return true;
 	}
 	
@@ -170,7 +170,7 @@ public class CADEngine extends Observer {
 		CADEngine theCADEngine = new CADEngine(subject);
 		
 		// Start the run loop.
-		theCADEngine.doRun("./src/main/java/com/duncanson/DocRouter/DocRouterOpCode.fodg", "id3", true);	
+		theCADEngine.doRun("./src/main/java/com/duncanson/DocRouter/DocRouterOpCode.fodg", "id7", true);	
 	}
 }
 
