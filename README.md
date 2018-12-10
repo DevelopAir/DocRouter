@@ -1,7 +1,7 @@
 # DocRouter
 Java Framework that routes document images through a configurable workflow process.
-<p>Please click <b><a href=https://github.com/developair/DocRouter/docs/Orchestration.pdf>here</a></b> for a full description of what an orchestration tool can provide as demostrated with this Open Source project.<p>
-<p>This GitHub site with it's contents are being made available as a protected project under the <b><a href=https://github.com/developair/GoDocRouter/docs/license.rtf>Open Software License v. 3.0 (OSL-3.0).</a></b></p><p>Copyright Paul Duncanson 2018, All Rights Reserved</p>
+<p>Please click <b><a href=https://github.com/developair/DocRouter/docs/Orchestration.pdf>here</a></b> for a full description of what an orchestration tool can provide as included and demonstrated with this Open Source project.<p>
+<p>This GitHub site with it's contents are being made available as a protected project under the <b><a href=https://github.com/developair/GoDocRouter/docs/license.pdf>Open Software License v. 3.0 (OSL-3.0).</a></b></p>
 <p>The following workflow defines the order of events by utilizing the Open Source designer tool, <a href=https://en.wikipedia.org/wiki/LibreOffice>LibreOffice</a>, with corresponding connected shapes.<p>
 <p align="center">
   <img src="./WorkFlowExample.png" width="500"/>
@@ -10,9 +10,9 @@ Java Framework that routes document images through a configurable workflow proce
 One transformation defined in the workflow as illustrated above, doOCR, will perform Optical Character Recognition on supplied document images utilizing the <b><a href=https://en.wikipedia.org/wiki/Tesseract_(software)>Tesseract-OCR</a></b> library.<p><p>
 <b>To install and run the attached Java Frameework:</b><p><p>
 <b>Step 1:</b>  Download and unzip the attached DocRouter Application by clicking the corresponding 'Clone or Download...' green button and then select 'Download Zip'.<p>
-<b>Step 2:</b>  Open the enclosing 'DocRouter' folder created from Step 1 with the Eclipse IDE by selecting 'File->Open Projects from File System...'.<p>
-<b>Step 3:</b>  Open the CADEngine.java file from Eclipse.<p>
-<b>Step 4:</b>  Select 'Run->Run As->Java Application' from Eclipse.<p>
+<b>Step 2:</b>  Open the enclosing 'DocRouter' folder created from Step 1 with the IntelliJ IDE by selecting 'File->Open Projects from File System...'.<p>
+<b>Step 3:</b>  Open the CADEngine.java file from IntelliJ.<p>
+<b>Step 4:</b>  Select 'Run->Run As->Java Application' from IntelliJ.<p>
 <b>Step 5:</b>  Verify that correspondingly created *.txt files have been placed in the './DocRouter/Other' and './DocRouter/SoftwareDoc' directories to represent originating image files from './DocRouter/DocImages'.<p>
 <p><b>DocRouter is made up of the following modules:</b><p><p>
 <b><a href=https://github.com/DevelopAir/DocRouter/blob/master/src/main/java/com/duncanson/DocRouter/OpCodeML.java>OpCodeML.java</a></b> - Parses the XML form of this illustrated design into an internal hashmap for data driven invocation of corresponding operands.<p>
