@@ -1,8 +1,11 @@
 # DocRouter
-Java Framework that routes document images through a configurable workflow process.<p>
-This workflow defines the order of events by utilizing the Open Source designer tool, <a href=https://en.wikipedia.org/wiki/LibreOffice>LibreOffice</a>, with corresponding connected shapes.<p>
+Java Framework that routes document images through a configurable workflow process.
+<p>Please click <b><a href=https://github.com/developair/DocRouter/docs/Orchestration.pdf>here</a></b> for a full description of what an orchestration tool can provide as demostrated with this Open Source project.<p>
+<p>This GitHub site with it's contents are being made available as a protected project under the <b><a href=https://github.com/developair/GoDocRouter/docs/license.rtf>Open Software License v. 3.0 (OSL-3.0).</a></b></p><p>Copyright Paul Duncanson 2018, All Rights Reserved</p>
+<p>The following workflow defines the order of events by utilizing the Open Source designer tool, <a href=https://en.wikipedia.org/wiki/LibreOffice>LibreOffice</a>, with corresponding connected shapes.<p>
 <p align="center">
   <img src="./WorkFlowExample.png" width="500"/>
+</p>
 </p>
 One transformation defined in the workflow as illustrated above, doOCR, will perform Optical Character Recognition on supplied document images utilizing the <b><a href=https://en.wikipedia.org/wiki/Tesseract_(software)>Tesseract-OCR</a></b> library.<p><p>
 <b>To install and run the attached Java Frameework:</b><p><p>
